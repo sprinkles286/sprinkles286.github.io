@@ -3,62 +3,79 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class movement : MonoBehaviour
+
 {
-public float health = 6;
-    
-
-    //If your GameObject keeps colliding with another GameObject with a Collider, do something
-    void OnCollisionEnter(Collision collision)
-    {
-        //Check to see if the Collider's name is "Chest"
-        if (collision.collider.name == "Damage")
-        {
-            //Output the message
-            Debug.Log(health -= 1);
-        }
-        if (collision.collider.name == "Goal")
-        {
-            //Output the message
-            Debug.Log("You Win!");
-        }
-        if (collision.collider.name == "Heal")
-        {
-            Debug.Log(health += 1);
-        }
-        if (health == 0)
-        {
-            Debug.Log("You Lose!");
-        }
-    }
-
-    
-
+    //public Vector3 pos = new Vector3(5f,10,15f);
+    public TextMesh playerMSG;
+    public Vector3 playerStart;
+    public Transform obstacle, hazard;
+    float tileAmount = 1f;
+    public Transform playerPiece;
+    public Transform[] manyHazards; 
+    public Transform[] manyObstacles;
     // Start is called before the first frame update
     void Start()
     {
-        
+playerStart = playerPiece.position;
     }
 
     // Update is called once per frame
     void Update()
     {
-        transform.Translate(0,0,0.06f);
+        Vector3 newPos = playerPiece.position;
 
-        if(Input.GetKey("left"))
-        {
-        transform.Translate(-0.1f,0,0);
-        }
-        if(Input.GetKey("right"))
-        {
-        transform.Translate(0.1f,0,0);
-        }
-        // if(Input.GetKey("up"))
+        // if(Input.anyKeyDown)
         // {
-        // transform.Translate(-0.1f,0,0);
+        //     playerMSG.text = "welcome";
         // }
-        // if(Input.GetKey("down"))
-        // {
-        // transform.Translate(0.1f,0,0);
-        // }
+        if (Input.GetKeyDown("left"))
+        {
+            newPos += new Vector3(-tileAmount, 0f, 0f);
+            
+        }
+        if (Input.GetKeyDown("right"))
+        {
+
+            newPos += new Vector3(tileAmount, 0f, 0f);
+       }
+           
+        if (Input.GetKeyDown("up"))
+        {
+            newPos += new Vector3(0f, 0f, tileAmount);
+
+        }
+        if (Input.GetKeyDown("down"))
+        {
+
+            newPos += new Vector3(0f, 0f, -tileAmount);
+       }
+       if (obstacle.position != newPos)
+       {
+
+       playerPiece.position = newPos;
+       }
+
+       if(hazard.position == playerPiece.position)
+       {
+           playerPiece.position = playerStart;
+       }
+
+            for (int i = 0; i < manyHazards.Length; i++)
+            {
+                if (manyHazards[i].position == playerPiece.position)
+                {
+                    playerPiece.position = playerStart;
+                }
+            }
+            for (int i = 0; i < manyObstacles.Length; i++)
+            {
+                if (manyObstacles[i].position != newPos)
+                {
+                playerPiece.position = newPos;
+                }
+            }
+
+            
+       
     }
 }
